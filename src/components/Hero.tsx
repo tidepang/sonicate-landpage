@@ -27,7 +27,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center bg-black">
+    <section className="relative min-h-screen w-full overflow-hidden flex items-center bg-black">
       {/* 1. Background */}
       <StarBackground />
 
