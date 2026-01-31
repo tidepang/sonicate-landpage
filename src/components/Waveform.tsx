@@ -21,57 +21,83 @@ export const Waveform: React.FC<WaveformProps> = ({ className }) => {
     const resize = () => {
         const parent = canvas.parentElement;
         if (parent) {
-            canvas.width = parent.clientWidth * 1.5; // Break bounds intentionally
-            canvas.height = parent.clientHeight;
+            const width = parent.clientWidth || 800; // Fallback width
+            const height = parent.clientHeight || 256; // Fallback height
+            canvas.width = width* 0.6; // 移除 * 1.5，使用正常宽度
+            canvas.height = height;
+            console.log('Canvas resized:', canvas.width, canvas.height); // Debug
         }
     };
     resize();
     window.addEventListener('resize', resize);
 
     const draw = () => {
-        time += 0.05;
+        time += 0.02; // 减慢速度：从 0.05 改为 0.02
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const width = canvas.width;
         const height = canvas.height;
         const centerY = height / 2;
         
-        // Gradient
-        const gradient = ctx.createLinearGradient(0, 0, width, 0);
-        gradient.addColorStop(0, 'rgba(139, 92, 246, 0.1)'); // Purple fade
-        gradient.addColorStop(0.4, 'rgba(6, 182, 212, 0.6)'); // Cyan center-ish
-        gradient.addColorStop(0.6, 'rgba(167, 139, 250, 0.6)'); // Purple center-ish
-        gradient.addColorStop(1, 'rgba(6, 182, 212, 0.1)'); // Cyan fade
+        // Bar settings - Finer bars for high-end look
+        const barWidth = 2; // Thinner bars
+        const barGap = 4;   // Adequate gap
+        const totalBarWidth = barWidth + barGap;
+        const barCount = Math.ceil(width / totalBarWidth);
 
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
+        // Brighter, sharper gradient
+        const gradient = ctx.createLinearGradient(0, centerY - 150, 0, centerY + 150);
+        gradient.addColorStop(0.0, 'rgba(139, 92, 246, 0.0)');   // Fade top
+        gradient.addColorStop(0.3, 'rgba(167, 139, 250, 0.8)'); // Purple
+        gradient.addColorStop(0.5, 'rgba(255, 255, 255, 1.0)'); // White center (Bright!)
+        gradient.addColorStop(0.7, 'rgba(34, 211, 238, 0.8)');  // Cyan
+        gradient.addColorStop(1.0, 'rgba(34, 211, 238, 0.0)');  // Fade bottom
 
-        const bars = 100;
-        const step = width / bars;
+        ctx.fillStyle = gradient;
 
-        for (let i = 0; i < bars; i++) {
-            const x = i * step;
+        for (let i = 0; i < barCount; i++) {
+            const x = i * totalBarWidth;
             
-            // Distance from center (0 to 1) for tapering
-            const distFromCenter = Math.abs((x - width / 2) / (width / 2));
-            const taper = Math.max(0, 1 - distFromCenter * 1.5); // Taper off edges
+            // Normalized X within canvas (-1 to 1)
+            const normX = (x - width / 2) / (width / 3.5); // 3.5 Divisor to keep wave centered
 
-            // Wave calculation
-            // Mix of sine waves for organic look
-            const noise = Math.sin(i * 0.2 + time) + Math.sin(i * 0.5 - time * 2) * 0.5;
-            const barHeight = Math.max(10, taper * 150 * (Math.abs(noise) + 0.2));
+            // Create distinct "humps" using Gaussian functions
+            // Main center hump
+            const hump1 = Math.exp(-Math.pow(normX, 2) * 2);
+            // Side humps
+            const hump2 = Math.exp(-Math.pow(normX - 0.8, 2) * 5) * 0.6;
+            const hump3 = Math.exp(-Math.pow(normX + 0.8, 2) * 5) * 0.6;
+            
+            const shape = hump1 + hump2 + hump3;
 
+            // Dynamic movement
+            // Using symmetrical noise
+            const noiseX = Math.abs(normX * 10); // Symmetry
+            const noise = Math.sin(noiseX - time * 2) * Math.cos(noiseX * 0.5 + time) * 0.5 + 0.5;
+            
+            // Beat pulse
+            const pulse = Math.pow(Math.sin(time * 3), 4) * 0.15;
+
+            // Combined height
+            let barHeight = (shape * noise + pulse) * (height * 0.6);
+            
+            // Min height for visibility
+            barHeight = Math.max(4, barHeight);
+            
+            // Taper edges completely
+            if (Math.abs(normX) > 1.5) barHeight *= 0;
+
+            // Draw Bar (Symmetrical)
             ctx.beginPath();
-            ctx.moveTo(x, centerY - barHeight / 2);
-            ctx.lineTo(x, centerY + barHeight / 2);
-            
-            // Opacity fade based on taper
-            ctx.globalAlpha = taper;
-            ctx.stroke();
+            if (ctx.roundRect) {
+                ctx.roundRect(x, centerY - barHeight / 2, barWidth, barHeight, 2);
+            } else {
+                ctx.rect(x, centerY - barHeight / 2, barWidth, barHeight);
+            }
+            ctx.fill();
         }
         
-        // Connecting line
+        // Center line
         ctx.beginPath();
         ctx.moveTo(0, centerY);
         ctx.lineTo(width, centerY);
@@ -91,12 +117,15 @@ export const Waveform: React.FC<WaveformProps> = ({ className }) => {
   }, []);
 
   return (
-    <div className={`relative w-full h-64 overflow-visible ${className}`}>
+    <div className={`relative w-full h-64 overflow-visible ${className}`} style={{ minHeight: '256px' }}>
         {/* Container that allows overflow visually but can be placed in grid */}
         <canvas 
             ref={canvasRef}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-full pointer-events-none" 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-full pointer-events-none"
+            style={{ zIndex: 1 }}
         />
+        
+        {/* Optional: Add track names overlay if needed, but keeping it clean for now as requested "elements" likely refers to visual style */}
     </div>
   );
 };

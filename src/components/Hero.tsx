@@ -11,14 +11,14 @@ export function Hero() {
   const { language } = useLanguage();
 
   const t = {
-    tagline: language === 'zh' ? 'AI音乐智能体' : 'AI MUSIC INTELLIGENCE',
+    // tagline: language === 'zh' ? 'AI音乐智能体' : 'AI MUSIC INTELLIGENCE',
     title: language === 'zh' ? '全新定义 DJ 工作流' : 'REDEFINING THE\nDJ WORKFLOW',
     description: language === 'zh' 
       ? 'Sonicite Flow帮助你更快理解音乐、做出更清晰的选歌与编排判断，把时间从反复试听与试错中释放出来，留给真正重要的——你的创作与现场表达。'
       : 'Sonicite Flow helps you understand music faster, make clearer decisions, and frees you from repetitive trial-and-error to focus on what matters—your creativity.',
     tryFlow: language === 'zh' ? '试用 SONICITE FLOW' : 'TRY SONICITE FLOW',
     watchDemo: language === 'zh' ? '观看 DEMO' : 'WATCH DEMO',
-    promptPlaceholder: "Find tracks similar to Amelie Lens - Feel It with 128 BPM",
+    // promptPlaceholder: "Find tracks similar to Amelie Lens - Feel It with 128 BPM",
   };
 
   const stagger = {
@@ -94,24 +94,24 @@ export function Hero() {
         >
           {/* Waveform Visualization - Breaking Bounds */}
           {/* We position it absolutely or use negative margins to break grid bounds */}
-          <div className="relative w-[140%] -right-[20%] h-[400px] pointer-events-none">
+          <div className="relative w-[120%] h-[500px] pointer-events-none" style={{ zIndex: 1, marginLeft: '-110%' }}>
              <Waveform />
           </div>
 
           {/* Prompt Bar - Neon Style */}
-          <div className="absolute bottom-20 lg:bottom-1/4 left-0 right-10 lg:-left-20 lg:right-0">
+          <div className="absolute bottom-20 lg:bottom-1/4 left-0 right-10 lg:-left-20 lg:right-0" style={{ zIndex: 2 }}>
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000 animate-pulse"></div>
               <div className="relative bg-black/40 backdrop-blur-xl border border-white/10 rounded-lg p-1 flex items-center">
                 <div className="pl-4 pr-2 text-purple-400">
                   <span className="w-2 h-2 bg-purple-500 rounded-full inline-block animate-ping mr-2"></span>
                 </div>
-                <input 
+                {/* <input 
                   type="text" 
                   readOnly
                   value={t.promptPlaceholder}
                   className="w-full bg-transparent border-none outline-none text-sm sm:text-base text-white/90 placeholder-gray-500 font-mono py-4"
-                />
+                /> */}
                  {/* Decorative Corner accents */}
                  <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-purple-500"></div>
                  <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-500"></div>
