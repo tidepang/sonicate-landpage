@@ -134,15 +134,6 @@ export function Navigation() {
               </button>
             </div>
             
-            <a 
-              href="https://flow.sonicite.ai/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-white text-black text-sm tracking-wide uppercase hover:bg-purple-600 hover:text-white transition-colors inline-block text-center"
-              style={{ minWidth: '156px' }}
-            >
-              {t.getStarted}
-            </a>
           </div>
 
           <div className="md:hidden">
@@ -243,15 +234,6 @@ export function Navigation() {
                   </button>
                 </div>
                 
-                <a 
-                  href="https://flow.sonicite.ai/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="mt-4 px-8 py-3 bg-white text-black text-sm tracking-wide uppercase hover:bg-purple-600 hover:text-white transition-colors"
-                >
-                  {t.getStarted}
-                </a>
               </div>
             </div>
           </motion.div>

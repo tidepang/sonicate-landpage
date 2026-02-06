@@ -1,24 +1,18 @@
 
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { StarBackground } from './StarBackground';
-import { Waveform } from './Waveform';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export function Hero() {
-  const navigate = useNavigate();
   const { language } = useLanguage();
 
   const t = {
-    // tagline: language === 'zh' ? 'AI音乐智能体' : 'AI MUSIC INTELLIGENCE',
-    title: language === 'zh' ? '全新定义 DJ 工作流' : 'REDEFINING THE\nDJ WORKFLOW',
+    title: language === 'zh' ? '全新定义 DJ 工作流' : 'REDEFINING THE DJ WORKFLOW',
     description: language === 'zh' 
       ? 'Sonicite Flow帮助你更快理解音乐、做出更清晰的选歌与编排判断，把时间从反复试听与试错中释放出来，留给真正重要的——你的创作与现场表达。'
       : 'Sonicite Flow helps you understand music faster, make clearer decisions, and frees you from repetitive trial-and-error to focus on what matters—your creativity.',
     tryFlow: language === 'zh' ? '试用 SONICITE FLOW' : 'TRY SONICITE FLOW',
-    watchDemo: language === 'zh' ? '观看 DEMO' : 'WATCH DEMO',
-    // promptPlaceholder: "Find tracks similar to Amelie Lens - Feel It with 128 BPM",
   };
 
   const stagger = {
@@ -27,98 +21,73 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden flex items-center bg-black">
+    <section className="relative min-h-screen w-full overflow-hidden bg-black">
       {/* 1. Background */}
       <StarBackground />
 
       {/* 2. Content Container */}
-      <div className="container mx-auto px-6 z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full pt-20">
+      <div
+        className="container mx-auto px-6 relative z-10 pb-24"
+        style={{ paddingTop: 'clamp(180px, 22vh, 320px)' }}
+      >
         
-        {/* Left: Text & CTA */}
-        <motion.div 
+        {/* Text & CTA */}
+        <motion.div
           initial="hidden"
           animate="visible"
           transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}
-          className="space-y-8 lg:max-w-xl"
+          className="space-y-10 max-w-6xl"
         >
-          <motion.div variants={stagger} className="flex items-center gap-3">
-             <div className="h-[1px] w-8 bg-purple-500/50"></div>
-             <span className="text-purple-400 text-sm tracking-[0.2em] uppercase font-medium">{t.tagline}</span>
-          </motion.div>
-
-          <motion.div variants={stagger}>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[0.9] tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/50">
-              {t.title.split('\n').map((line, i) => (
-                <span key={i} className="block">{line}</span>
-              ))}
+          <motion.div variants={stagger} className="space-y-8">
+            <h1
+              className="font-black tracking-tighter text-white"
+              style={{ fontSize: 'clamp(52px, 7.2vw, 140px)', lineHeight: '0.7', fontWeight: '900' }}
+            >
+              {t.title}
             </h1>
-          </motion.div>
 
-          <motion.div variants={stagger}>
-            <p className="text-lg text-gray-400 leading-relaxed max-w-lg border-l-2 border-white/10 pl-6">
-              {t.description}
-            </p>
-          </motion.div>
-
-          <motion.div variants={stagger} className="flex flex-wrap gap-4 pt-4">
-            <button 
-              onClick={() => window.open('https://flow.sonicite.ai/', '_blank')}
-              className="group relative px-8 py-4 bg-purple-600 text-white font-semibold tracking-wide uppercase text-sm overflow-hidden transition-all duration-300 hover:scale-105"
-              style={{
-                boxShadow: '0 0 20px rgba(124, 58, 237, 0.5)',
-              }}
-            >
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-              <span className="relative z-10 flex items-center gap-2">
-                {t.tryFlow} <ArrowRight className="w-4 h-4" />
-              </span>
-            </button>
-
-            <button 
-              onClick={() => navigate('/demo')}
-              className="group px-8 py-4 border border-purple-500/30 text-white font-medium tracking-wide uppercase text-sm backdrop-blur-sm hover:bg-purple-500/10 transition-all duration-300 hover:border-purple-500/60"
-            >
-              <span className="flex items-center gap-2">
-                {t.watchDemo} <Play className="w-4 h-4 fill-current" />
-              </span>
-            </button>
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,720px)_auto] lg:items-center w-full" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '84px' }}>
+              <p className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-none" style={{ width: '700px'}}>
+                {t.description}
+              </p>
+              <div className="flex lg:justify-end lg:justify-self-end">
+                <button
+                  onClick={() => window.open('https://flow.sonicite.ai/', '_blank')}
+                  className="group relative px-8 py-4 bg-purple-600 text-white font-semibold tracking-wide uppercase text-sm overflow-hidden transition-all duration-300 hover:scale-105"
+                  style={{
+                    boxShadow: '0 0 20px rgba(124, 58, 237, 0.5)',
+                  }}
+                >
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                  <span className="relative z-10 flex items-center gap-2">
+                    {t.tryFlow} <ArrowRight className="w-4 h-4" />
+                  </span>
+                </button>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
 
-        {/* Right: Waveform & Prompt */}
-        <motion.div 
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="relative flex flex-col justify-center h-full"
+        {/* Video: Half-revealed */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.4 }}
+          className="mt-16 lg:mt-24"
         >
-          {/* Waveform Visualization - Breaking Bounds */}
-          {/* We position it absolutely or use negative margins to break grid bounds */}
-          <div className="relative w-[120%] h-[500px] pointer-events-none" style={{ zIndex: 1, marginLeft: '-110%' }}>
-             <Waveform />
-          </div>
-
-          {/* Prompt Bar - Neon Style */}
-          <div className="absolute bottom-20 lg:bottom-1/4 left-0 right-10 lg:-left-20 lg:right-0" style={{ zIndex: 2 }}>
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000 animate-pulse"></div>
-              <div className="relative bg-black/40 backdrop-blur-xl border border-white/10 rounded-lg p-1 flex items-center">
-                <div className="pl-4 pr-2 text-purple-400">
-                  <span className="w-2 h-2 bg-purple-500 rounded-full inline-block animate-ping mr-2"></span>
-                </div>
-                {/* <input 
-                  type="text" 
-                  readOnly
-                  value={t.promptPlaceholder}
-                  className="w-full bg-transparent border-none outline-none text-sm sm:text-base text-white/90 placeholder-gray-500 font-mono py-4"
-                /> */}
-                 {/* Decorative Corner accents */}
-                 <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-purple-500"></div>
-                 <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-500"></div>
-                 <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-purple-500"></div>
-                 <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-500"></div>
-              </div>
+          <div className="relative rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm overflow-hidden">
+            <div className="relative h-[190px] sm:h-[240px] lg:h-[320px] overflow-hidden">
+              <video
+                src="https://ufwqrsdoaxjxcsbxpirb.supabase.co/storage/v1/object/public/langding_page/landing.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-[140%] object-cover"
+                style={{ transform: 'translateY(-12%)' }}
+              />
             </div>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
           </div>
         </motion.div>
       </div>
